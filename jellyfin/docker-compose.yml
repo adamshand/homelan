@@ -1,0 +1,32 @@
+---
+version: "2"
+services:
+  # https://github.com/linuxserver/docker-jellyfin
+  jellyfin:
+    image: linuxserver/jellyfin
+    container_name: jellyfin
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=128
+      - TZ=Pacific/Auckland
+      - UMASK_SET=022 #optional
+    volumes:
+      - ./conf:/config
+      - /media:/data
+    #  - ./lib:/opt/vc/lib # optional
+    #ports:
+    #  - 8096:8096
+    #  - 8920:8920 # optional for ssl
+    #devices:
+    #  - /dev/dri:/dev/dri #optional
+    #  - /dev/vchiq:/dev/vchiq #optional
+    #  - /dev/video10:/dev/video10 #optional
+    #  - /dev/video11:/dev/video11 #optional
+    #  - /dev/video12:/dev/video12 #optional
+    labels:
+      - "traefik.backend=jellyfin"
+      - "traefik.frontend.rule=Host:jellyfin.local"
+      - "traefik.enable=true"
+      - "traefik.port=8096"
+      - "traefik.default.protocol=http"

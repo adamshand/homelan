@@ -1,0 +1,19 @@
+version: '3'
+services:
+  # https://github.com/sentriz/gonic
+  gonic:
+    image: sentriz/gonic:latest
+    container_name: gonic
+    restart: unless-stopped
+    environment:
+      - TZ=Pacific/Auckland
+    volumes:
+      - ./data:/data
+      - /media/music:/music:ro
+      - ./cache:/cache
+    labels:
+      - "traefik.backend=gonic"
+      - "traefik.frontend.rule=Host:gonic.local"
+      - "traefik.enable=true"
+      - "traefik.port=80"
+      - "traefik.default.protocol=http"

@@ -1,2 +1,3 @@
-# homelan
-Collection of homelan bits and pieces.
+# Homelab Setups
+
+Mostly docker compose files at this point. 

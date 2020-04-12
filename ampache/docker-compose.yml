@@ -1,0 +1,24 @@
+---
+version: "3"
+services:
+  ampache:
+    container_name: ampache
+    restart: unless-stopped
+    image: ampache/ampache:latest
+    #environment:
+    #  - PUID=1000
+    #  - PGID=128
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./conf/ampache:/var/www/config
+      - ./conf/apache:/etc/apache2/sites-enabled
+      - /media:/media
+    ports:
+      - 80:80
+    #  - 3689:3689 # daap
+    #labels:
+    #  - "traefik.backend=ampache"
+    #  - "traefik.frontend.rule=Host:ampache.local"
+    #  - "traefik.enable=true"
+    #  - "traefik.port=80"
+    #  - "traefik.default.protocol=http"

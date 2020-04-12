@@ -1,0 +1,49 @@
+---
+version: "2"
+services:
+  daapd:
+    # https://github.com/linuxserver/docker-daapd
+    image: linuxserver/daapd
+    container_name: daapd
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=128
+      - TZ=Pacific/Auckland
+    ports:
+      - 3689:3689
+        #- 3688:3688
+    volumes:
+      - ./conf:/config
+      - ./data:/data  
+      - /media:/media
+    # this is the easy way to get mDNS working, but it "bad" because then you have two avahi on the same mac.  which seems to work but i suspect will have weird edge conditions.
+    #network_mode: host
+    networks:
+      ## just the one line for docker assigned dynamic ip (in range or ip-range defined on network)
+      #- macvlan0
+      ## both the below lines for a static ip
+      macvlan0:
+        ipv4_address: 172.16.1.128
+
+## docker compose doesn't suport ip-range or aux-address(es) so you have to create the network manually with this command:
+# docker network create -d macvlan --subnet=172.16.1.0/24 --gateway=172.16.1.1 --ip-range=172.16.1.128/27 -o parent=enp0s10 macvlan0
+
+networks:
+  macvlan0:
+    external: true
+
+# this should work for automatic network creation but docker-compose doesn't support aux-addresses or ip-range so it's kinda useless.
+#networks:
+#  macvlan0:
+#    driver: macvlan
+#    driver_opts:
+#      parent: enp0s10
+#    ipam:
+#      config:
+#        - subnet:  172.16.1.0/27
+#          gateway: 172.16.1.1
+#          ip-range: 172.16.1.128/27
+#          aux-addresses: 		# don't assign these addresses
+#            cottage=172.16.1.2
+#            bighouse=172.16.1.3

@@ -1,0 +1,28 @@
+version: "3"
+services:
+  navidrome:
+    image: deluan/navidrome:latest
+    container_name: navidrome
+    restart: unless-stopped
+    #ports: # commented out for traefik
+    #  - "4533:4533"
+    environment:
+      # All options with their default values:
+      ND_MUSICFOLDER: /music
+      ND_DATAFOLDER: /data
+      ND_SCANINTERVAL: 1m
+      ND_LOGLEVEL: info  
+      ND_PORT: 80
+      ND_TRANSCODINGCACHESIZE: 100MB
+      ND_SESSIONTIMEOUT: 30m
+      ND_BASEURL: ""
+    volumes:
+      - ./data:/data
+      - /media/music:/music:ro
+      - /srv/static-binaries:/static
+    labels:
+      - "traefik.backend=navidrome"
+      - "traefik.frontend.rule=Host:navidrome.local"
+      - "traefik.enable=true"
+      - "traefik.port=80"
+      - "traefik.default.protocol=http"
